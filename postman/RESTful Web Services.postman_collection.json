@@ -68,17 +68,28 @@
 				{
 					"name": "Get User by id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzE3MjN9.lSScflE4SDMjCQcqonZmDX98qBavnULuDAoxBXItLOM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8088/users",
+							"raw": "http://localhost:8088/users/3e81aea2-e0cf-4fcf-a12d-54e08b818f5c",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8088",
 							"path": [
-								"users"
+								"users",
+								"3e81aea2-e0cf-4fcf-a12d-54e08b818f5c"
 							]
 						}
 					},
@@ -87,17 +98,37 @@
 				{
 					"name": "Update User by id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzM5OTN9.FWxU4PBi6EBWVv4lo3zMJfIHd0TcYLY_31twP6FGDPM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Wick\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8088/users",
+							"raw": "http://localhost:8088/users/562c29bb-c33d-4dce-94ee-d5a049360650",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8088",
 							"path": [
-								"users"
+								"users",
+								"562c29bb-c33d-4dce-94ee-d5a049360650"
 							]
 						}
 					},
@@ -106,17 +137,67 @@
 				{
 					"name": "Delete User by id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzE3MjN9.lSScflE4SDMjCQcqonZmDX98qBavnULuDAoxBXItLOM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8088/users",
+							"raw": "http://localhost:8088/users/562c29bb-c33d-4dce-94ee-d5a049360650",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8088",
 							"path": [
-								"users"
+								"users",
+								"562c29bb-c33d-4dce-94ee-d5a049360650"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Users using pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzE3MjN9.lSScflE4SDMjCQcqonZmDX98qBavnULuDAoxBXItLOM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": null,\r\n    \"lastName\": null,\r\n    \"email\": null,\r\n    \"page\": 0,\r\n    \"size\": 10,\r\n    \"sortList\": [\r\n        \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/users/pagination",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"pagination"
 							]
 						}
 					},
