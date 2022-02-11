@@ -7,17 +7,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class Utils {
 
-    public String generateUserId() {
+    public String generateRandomId() {
         return UUID.randomUUID().toString();
     }
 

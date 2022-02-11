@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,5 +40,10 @@ public class UserEntity implements Serializable {
     // set 'false' as a default value
     @Column(nullable = false)
     private Boolean emailVerificationStatus = false;
+
+
+    // specify the name of the field that owns the relationship in the AddressEntity class
+    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses;
 
 }

@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Wick\",\r\n    \"email\": \"jwick@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+							"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Wick\",\r\n    \"email\": \"jwick@gmail.com\",\r\n    \"password\": \"123\",\r\n    \"addresses\": [\r\n        {\r\n            \"city\": \"Thessaloniki\",\r\n            \"country\": \"Greece\",\r\n            \"streetName\": \"Nikis 91\",\r\n            \"postalCode\": \"56431\",\r\n            \"type\": \"billing\"\r\n        },\r\n        {\r\n            \"city\": \"Thessaloniki\",\r\n            \"country\": \"Greece\",\r\n            \"streetName\": \"Nikis 91\",\r\n            \"postalCode\": \"56431\",\r\n            \"type\": \"shipping\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +81,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8088/users/3e81aea2-e0cf-4fcf-a12d-54e08b818f5c",
+							"raw": "http://localhost:8088/users/a8836f62-8be2-439c-a45a-a6ff0aecab2c",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -89,7 +89,7 @@
 							"port": "8088",
 							"path": [
 								"users",
-								"3e81aea2-e0cf-4fcf-a12d-54e08b818f5c"
+								"a8836f62-8be2-439c-a45a-a6ff0aecab2c"
 							]
 						}
 					},
@@ -120,7 +120,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8088/users/562c29bb-c33d-4dce-94ee-d5a049360650",
+							"raw": "http://localhost:8088/users/3e81aea2-e0cf-4fcf-a12d-54e08b818f5c",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -128,7 +128,7 @@
 							"port": "8088",
 							"path": [
 								"users",
-								"562c29bb-c33d-4dce-94ee-d5a049360650"
+								"3e81aea2-e0cf-4fcf-a12d-54e08b818f5c"
 							]
 						}
 					},
@@ -198,6 +198,42 @@
 							"path": [
 								"users",
 								"pagination"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Address",
+			"item": [
+				{
+					"name": "Get Addresses by User Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzE3MjN9.lSScflE4SDMjCQcqonZmDX98qBavnULuDAoxBXItLOM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8088/users/b6da3205-5660-4155-b223-507a845ce837/addresses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"b6da3205-5660-4155-b223-507a845ce837",
+								"addresses"
 							]
 						}
 					},

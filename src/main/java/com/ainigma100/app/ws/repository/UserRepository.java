@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     UserEntity findByEmail(String email);
 
-    UserEntity getByUserId(String id);
+    UserEntity findByUserId(String userId);
 
     @Query(value = "SELECT u FROM UserEntity u " +
             "WHERE ( :#{#criteria.firstName} IS NULL OR u.firstName LIKE :#{#criteria.firstName}% ) " +

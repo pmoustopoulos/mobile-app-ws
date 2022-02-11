@@ -1,6 +1,7 @@
 package com.ainigma100.app.ws.service;
 
-import com.ainigma100.app.ws.dto.UserDto;
+import com.ainigma100.app.ws.dto.AddressDTO;
+import com.ainigma100.app.ws.dto.UserDTO;
 import com.ainigma100.app.ws.entity.UserEntity;
 import com.ainigma100.app.ws.exception.RecordAlreadyExistsException;
 import com.ainigma100.app.ws.exception.RecordNotFoundException;
@@ -10,7 +11,6 @@ import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.utils.SortItem;
 import com.ainigma100.app.ws.utils.Utils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDTO createUser(UserDTO userDto) {
 
         UserEntity userFromDb = userRepository.findByEmail(userDto.getEmail());
 
@@ -63,21 +63,32 @@ public class UserServiceImpl implements UserService {
             throw new RecordAlreadyExistsException("User with email '" + userFromDb.getEmail() + "' already exists");
         }
 
+        for (int i = 0; i < userDto.getAddresses().size(); i++) {
+
+            AddressDTO addressDTO = userDto.getAddresses().get(i);
+            addressDTO.setUserDetails(userDto);
+            addressDTO.setAddressId(utils.generateRandomId());
+
+            // set back the updated address to the userDto
+            userDto.getAddresses().set(i, addressDTO);
+        }
+
+
         UserEntity userEntity = utils.map(userDto, UserEntity.class);
 
-        userEntity.setUserId(utils.generateUserId());
+        userEntity.setUserId(utils.generateRandomId());
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         UserEntity savedUser = userRepository.save(userEntity);
 
         // map the object into the preferred return type
-        UserDto returnValue = utils.map(savedUser, UserDto.class);
+        UserDTO returnValue = utils.map(savedUser, UserDTO.class);
 
         return returnValue;
     }
 
     @Override
-    public UserDto getUser(String email) {
+    public UserDTO getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if(userEntity == null) {
@@ -85,30 +96,30 @@ public class UserServiceImpl implements UserService {
         }
 
         // map the object into the preferred return type
-        UserDto returnValue = utils.map(userEntity, UserDto.class);
+        UserDTO returnValue = utils.map(userEntity, UserDTO.class);
 
         return returnValue;
     }
 
     @Override
-    public UserDto getUserByUserId(String userId) {
+    public UserDTO getUserByUserId(String userId) {
 
-        UserEntity userFromDb = userRepository.getByUserId(userId);
+        UserEntity userFromDb = userRepository.findByUserId(userId);
 
         if (userFromDb == null) {
             throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");
         }
 
         // map the object into the preferred return type
-        UserDto returnValue = utils.map(userFromDb, UserDto.class);
+        UserDTO returnValue = utils.map(userFromDb, UserDTO.class);
 
         return returnValue;
     }
 
     @Override
-    public UserDto updateUser(String userId, UserDto userDto) {
+    public UserDTO updateUser(String userId, UserDTO userDto) {
 
-        UserEntity userFromDb = userRepository.getByUserId(userId);
+        UserEntity userFromDb = userRepository.findByUserId(userId);
 
         if (userFromDb == null) {
             throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");
@@ -120,7 +131,7 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedUser = userRepository.save(userFromDb);
 
         // map the object into the preferred return type
-        UserDto returnValue = utils.map(updatedUser, UserDto.class);
+        UserDTO returnValue = utils.map(updatedUser, UserDTO.class);
 
         return returnValue;
     }
@@ -128,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> deleteUserByUserId(String userId) {
 
-        UserEntity userFromDb = userRepository.getByUserId(userId);
+        UserEntity userFromDb = userRepository.findByUserId(userId);
 
         if (userFromDb == null) {
             throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");

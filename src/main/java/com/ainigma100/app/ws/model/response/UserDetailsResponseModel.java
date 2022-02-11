@@ -4,15 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
 public class UserDetailsResponseModel implements Serializable {
 
-    // this is not the actual id. It is a public user key
-    private String userId;
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
+
+    private List<AddressesResponseModel> addresses;
 
 }

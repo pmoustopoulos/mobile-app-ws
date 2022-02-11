@@ -1,7 +1,7 @@
 package com.ainigma100.app.ws.security;
 
 import com.ainigma100.app.ws.SpringApplicationContext;
-import com.ainigma100.app.ws.dto.UserDto;
+import com.ainigma100.app.ws.dto.UserDTO;
 import com.ainigma100.app.ws.model.request.UserLoginRequestModel;
 import com.ainigma100.app.ws.service.UserService;
 import com.auth0.jwt.JWT;
@@ -79,7 +79,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // the name of the bean should be starting with lower case
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDto userDto = userService.getUser(userName);
+        UserDTO userDto = userService.getUser(userName);
 
         // add the information to the header
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
