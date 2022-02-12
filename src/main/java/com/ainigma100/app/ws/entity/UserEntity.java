@@ -43,7 +43,7 @@ public class UserEntity implements Serializable {
 
 
     // specify the name of the field that owns the relationship in the AddressEntity class
-    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
 
 }
