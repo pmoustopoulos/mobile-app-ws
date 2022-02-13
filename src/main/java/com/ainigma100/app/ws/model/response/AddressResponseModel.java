@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class AddressesResponseModel implements Serializable {
+public class AddressResponseModel implements Serializable {
 
     private String addressId;
     private String city;

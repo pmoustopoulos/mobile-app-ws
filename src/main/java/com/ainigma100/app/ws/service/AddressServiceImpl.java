@@ -33,5 +33,19 @@ public class AddressServiceImpl implements AddressService {
         return utils.mapList(addressEntityList, AddressDTO.class);
     }
 
+    @Override
+    public AddressDTO getUserAddressById(String userId, String addressId) {
+
+        AddressDTO returnValue = new AddressDTO();
+
+        AddressEntity addressFromDb = addressRepository.findUserAddressById(userId, addressId);
+
+        if (addressFromDb != null) {
+            returnValue = utils.map(addressFromDb, AddressDTO.class);
+        }
+
+        return returnValue;
+    }
+
 
 }

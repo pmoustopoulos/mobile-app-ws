@@ -2,16 +2,16 @@ package com.ainigma100.app.ws.controller;
 
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
-import com.ainigma100.app.ws.model.request.AddressRequestModel;
 import com.ainigma100.app.ws.model.request.UserDetailsRequestModel;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
-import com.ainigma100.app.ws.model.response.AddressesResponseModel;
+import com.ainigma100.app.ws.model.response.AddressResponseModel;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.service.AddressService;
 import com.ainigma100.app.ws.service.UserService;
 import com.ainigma100.app.ws.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,22 +78,27 @@ public class UserController {
     }
 
 
-    @GetMapping("/{id}/addresses")
-    public List<AddressesResponseModel> getAddressesByUserId(@PathVariable String id) {
+    @GetMapping("/{userId}/addresses")
+    public List<AddressResponseModel> getAddressesByUserId(@PathVariable String userId) {
 
-        List<AddressDTO> addressDTOList = addressService.getAddressesByUserId(id);
+        List<AddressDTO> addressDTOList = addressService.getAddressesByUserId(userId);
 
-        return utils.mapList(addressDTOList, AddressesResponseModel.class);
+        return utils.mapList(addressDTOList, AddressResponseModel.class);
 
     }
 
-//    @GetMapping("/{id}/addresses/{addressId}")
-//    public ResponseEntity<AddressRequestModel> getUserAddressByAddressId(
-//            @PathVariable String id,
-//            @PathVariable String addressId
-//    ) {
-//
-//    }
+    @GetMapping("/{userId}/addresses/{addressId}")
+    public ResponseEntity<AddressResponseModel> getUserAddressByAddressId(
+            @PathVariable String userId,
+            @PathVariable String addressId
+    ) {
+
+        AddressDTO addressDTO = addressService.getUserAddressById(userId, addressId);
+
+        AddressResponseModel returnValue = utils.map(addressDTO, AddressResponseModel.class);
+
+        return new ResponseEntity<>(returnValue, HttpStatus.OK);
+    }
 
 
 }

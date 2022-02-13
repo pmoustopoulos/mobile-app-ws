@@ -15,6 +15,6 @@ public class UserDetailsResponseModel implements Serializable {
     private String lastName;
     private String email;
 
-    private List<AddressesResponseModel> addresses;
+    private List<AddressResponseModel> addresses;
 
 }
