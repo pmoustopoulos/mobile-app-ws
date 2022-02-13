@@ -23,7 +23,7 @@ class UserRepositoryTest {
     @BeforeEach
     public void setUp() {
         userEntity = UserEntity.builder()
-                .userId("user id")
+                .id("id")
                 .firstName("Petros")
                 .lastName("Tester")
                 .email("ptester@gmail.com")
@@ -62,7 +62,6 @@ class UserRepositoryTest {
 
         // then - verify the output
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getId()).isPositive();
 
     }
 

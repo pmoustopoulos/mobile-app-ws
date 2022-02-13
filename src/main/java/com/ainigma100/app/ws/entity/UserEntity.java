@@ -1,6 +1,7 @@
 package com.ainigma100.app.ws.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,12 +17,9 @@ import java.util.List;
 public class UserEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    // public user id that will be sent back contained in the response
-    @Column(nullable = false)
-    private String userId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    private String id;
 
     @Column(nullable = false, length = 50)
     private String firstName;

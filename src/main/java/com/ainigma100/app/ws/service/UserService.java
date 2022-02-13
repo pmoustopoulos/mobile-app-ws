@@ -10,9 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
     UserDTO createUser(UserDTO userDto);
     UserDTO getUser(String email);
-    UserDTO getUserByUserId(String userId);
+    UserDTO getUserById(String userId);
     UserDTO updateUser(String userId, UserDTO userDto);
-    ResponseEntity<String> deleteUserByUserId(String id);
+    ResponseEntity<String> deleteUserById(String id);
 
     ResponseEntity<Page<UserDetailsResponseModel>> getUsersUsingPagination(UserSearchCriteria userSearchCriteria);
 }

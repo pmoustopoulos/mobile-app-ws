@@ -1,6 +1,7 @@
 package com.ainigma100.app.ws.entity;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,12 +16,10 @@ import java.io.Serializable;
 public class AddressEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    private String id;
 
-    // public address id that will be sent back contained in the response
-    @Column(nullable = false)
-    private String addressId;
 
     @Column(nullable = false, length = 15)
     private String city;

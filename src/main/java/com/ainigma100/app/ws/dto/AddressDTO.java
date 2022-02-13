@@ -9,8 +9,7 @@ import java.io.Serializable;
 @Setter
 public class AddressDTO implements Serializable {
 
-    private long id;
-    private String addressId;
+    private String id;
     private String city;
     private String country;
     private String streetName;

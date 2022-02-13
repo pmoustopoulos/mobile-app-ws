@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -67,7 +68,6 @@ public class UserServiceImpl implements UserService {
 
             AddressDTO addressDTO = userDto.getAddresses().get(i);
             addressDTO.setUserDetails(userDto);
-            addressDTO.setAddressId(utils.generateRandomId());
 
             // set back the updated address to the userDto
             userDto.getAddresses().set(i, addressDTO);
@@ -76,7 +76,6 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity = utils.map(userDto, UserEntity.class);
 
-        userEntity.setUserId(utils.generateRandomId());
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         UserEntity savedUser = userRepository.save(userEntity);
@@ -102,16 +101,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserByUserId(String userId) {
+    public UserDTO getUserById(String userId) {
 
-        UserEntity userFromDb = userRepository.findByUserId(userId);
+        Optional<UserEntity> userFromDb = userRepository.findById(userId);
 
-        if (userFromDb == null) {
-            throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");
+        if (userFromDb.isEmpty()) {
+            throw new RecordNotFoundException("Record with id: '" + userId + "' was not found!");
         }
 
         // map the object into the preferred return type
-        UserDTO returnValue = utils.map(userFromDb, UserDTO.class);
+        UserDTO returnValue = utils.map(userFromDb.get(), UserDTO.class);
 
         return returnValue;
     }
@@ -119,16 +118,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(String userId, UserDTO userDto) {
 
-        UserEntity userFromDb = userRepository.findByUserId(userId);
+        Optional<UserEntity> userFromDb = userRepository.findById(userId);
 
-        if (userFromDb == null) {
-            throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");
+        if (userFromDb.isEmpty()) {
+            throw new RecordNotFoundException("Record with id: '" + userId + "' was not found!");
         }
 
-        userFromDb.setFirstName(userDto.getFirstName());
-        userFromDb.setLastName(userDto.getLastName());
+        userFromDb.get().setFirstName(userDto.getFirstName());
+        userFromDb.get().setLastName(userDto.getLastName());
 
-        UserEntity updatedUser = userRepository.save(userFromDb);
+        UserEntity updatedUser = userRepository.save(userFromDb.get());
 
         // map the object into the preferred return type
         UserDTO returnValue = utils.map(updatedUser, UserDTO.class);
@@ -137,17 +136,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> deleteUserByUserId(String userId) {
+    public ResponseEntity<String> deleteUserById(String userId) {
 
-        UserEntity userFromDb = userRepository.findByUserId(userId);
+        Optional<UserEntity> userFromDb = userRepository.findById(userId);
 
-        if (userFromDb == null) {
-            throw new RecordNotFoundException("Record with userId: '" + userId + "' was not found!");
+        if (userFromDb.isEmpty()) {
+            throw new RecordNotFoundException("Record with id: '" + userId + "' was not found!");
         }
 
-        userRepository.delete(userFromDb);
+        userRepository.delete(userFromDb.get());
 
-        String returnValue = "Record with userId: '"  + userId + "' has been deleted!";
+        String returnValue = "Record with id: '"  + userId + "' has been deleted!";
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 

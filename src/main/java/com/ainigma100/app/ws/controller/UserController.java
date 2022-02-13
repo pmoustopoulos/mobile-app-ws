@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.controller;
 
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
+import com.ainigma100.app.ws.model.request.AddressRequestModel;
 import com.ainigma100.app.ws.model.request.UserDetailsRequestModel;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.AddressesResponseModel;
@@ -39,7 +40,7 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDetailsResponseModel getUserByUserId(@PathVariable String id) {
 
-        UserDTO userDto = userService.getUserByUserId(id);
+        UserDTO userDto = userService.getUserById(id);
 
         return utils.map(userDto, UserDetailsResponseModel.class);
 
@@ -73,7 +74,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
-        return userService.deleteUserByUserId(id);
+        return userService.deleteUserById(id);
     }
 
 
@@ -85,6 +86,14 @@ public class UserController {
         return utils.mapList(addressDTOList, AddressesResponseModel.class);
 
     }
+
+//    @GetMapping("/{id}/addresses/{addressId}")
+//    public ResponseEntity<AddressRequestModel> getUserAddressByAddressId(
+//            @PathVariable String id,
+//            @PathVariable String addressId
+//    ) {
+//
+//    }
 
 
 }

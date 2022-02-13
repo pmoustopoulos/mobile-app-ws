@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,8 +23,8 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<AddressDTO> getAddressesByUserId(String userId) {
 
-        // first find the user
-        UserEntity userEntity = userRepository.findByUserId(userId);
+        // first find the user or else return null
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
 
         // get the list of addresses associated to the specific user
         List<AddressEntity> addressEntityList = addressRepository.findAllByUserDetails(userEntity);
