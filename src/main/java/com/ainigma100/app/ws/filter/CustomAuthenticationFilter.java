@@ -1,9 +1,7 @@
-package com.ainigma100.app.ws.security;
+package com.ainigma100.app.ws.filter;
 
-import com.ainigma100.app.ws.SpringApplicationContext;
-import com.ainigma100.app.ws.dto.UserDTO;
 import com.ainigma100.app.ws.model.request.UserLoginRequestModel;
-import com.ainigma100.app.ws.service.UserService;
+import com.ainigma100.app.ws.security.SecurityConstants;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,15 +19,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@RequiredArgsConstructor
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+
 @Slf4j
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@RequiredArgsConstructor
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
 
 
     @Override
@@ -43,13 +44,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     .readValue(request.getInputStream(), UserLoginRequestModel.class);
 
 
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword());
+
             // authenticationManager will authenticate the user based on email and password
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            credentials.getEmail(),
-                            credentials.getPassword(),
-                            new ArrayList<>())
-            );
+            return authenticationManager.authenticate(authenticationToken);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -65,28 +64,43 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
 
-
         String userName = ((User) authentication.getPrincipal()).getUsername();
 
         // algorithm used to sign the JSON web token
-        Algorithm algorithm = Algorithm.HMAC256(SecurityConstants.TOKEN_SECRET.getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(SecurityConstants.JWT_SECRET.getBytes());
 
-        // here we are building the JSON Web Token
-        String token = JWT.create()
+        // here we are building the JSON Access Web Token
+        String accessToken = JWT.create()
                 .withSubject(userName)
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);	// signing the Web Token
 
-        // the name of the bean should be starting with lower case
-        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDTO userDto = userService.getUser(userName);
 
-        log.info("User '{}' has logged in", userDto.getId());
+        // here we are building the JSON Refresh Web Token
+        String refreshToken = JWT.create()
+                .withSubject(userName)
+                .withExpiresAt(new Date(System.currentTimeMillis() + (SecurityConstants.EXPIRATION_TIME * 3) ))
+                .withIssuer(request.getRequestURL().toString())
+                .sign(algorithm);	// signing the Web Token
+
+
 
         // add the information to the header
-        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-        response.addHeader("UserID",  userDto.getId());
+//        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + accessToken);
+//        response.addHeader("RefreshToken", SecurityConstants.TOKEN_PREFIX + refreshToken);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", accessToken);
+        tokens.put("refresh_token", refreshToken);
+
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
     }
+
+
+
+
 
 }

@@ -8,7 +8,9 @@ import com.ainigma100.app.ws.model.response.AddressResponseModel;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.service.AddressService;
 import com.ainigma100.app.ws.service.UserService;
+import com.ainigma100.app.ws.swagger.SwaggerConstants;
 import com.ainigma100.app.ws.utils.Utils;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(tags = {SwaggerConstants.API_TAG})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")

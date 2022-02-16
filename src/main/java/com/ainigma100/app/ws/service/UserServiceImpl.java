@@ -11,6 +11,7 @@ import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.utils.SortItem;
 import com.ainigma100.app.ws.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -164,9 +166,12 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if(userEntity == null) {
+            log.error("User {} not found in the database", email);
             // provided by Spring
             throw new UsernameNotFoundException(email);
         }
+
+        log.info("User {} found in the database", email);
 
         // User is provided by Spring
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
