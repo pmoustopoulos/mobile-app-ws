@@ -9,6 +9,8 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.UiConfiguration;
+import springfox.documentation.swagger.web.UiConfigurationBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +59,21 @@ public class SwaggerConfig {
     private List<SecurityReference> securityReference() {
         AuthorizationScope[] authorizationScope = { new AuthorizationScope(AUTHORIZATION_SCOPE, AUTHORIZATION_DESCRIPTION) };
         return singletonList(new SecurityReference(SECURITY_REFERENCE, authorizationScope));
+    }
+
+
+    /**
+     * This method enables us to modify the ui in swagger.
+     * There are many things we can modify but now we just hide the models from the ui.
+     * https://springfox.github.io/springfox/docs/current/#springfox-spring-mvc-and-spring-boot
+     *
+     * @return
+     */
+    @Bean
+    UiConfiguration uiConfig() {
+        return UiConfigurationBuilder.builder()
+                .defaultModelsExpandDepth(-1)
+                .build();
     }
 
 }
