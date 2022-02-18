@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.filter;
 
 import com.ainigma100.app.ws.model.request.UserLoginRequestModel;
 import com.ainigma100.app.ws.security.SecurityConstants;
+import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JWTTokenProvider jwtTokenProvider;
 
 
     @Override
@@ -66,25 +68,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String userName = ((User) authentication.getPrincipal()).getUsername();
 
-        // algorithm used to sign the JSON web token
-        Algorithm algorithm = Algorithm.HMAC256(SecurityConstants.JWT_SECRET.getBytes());
-
         // here we are building the JSON Access Web Token
-        String accessToken = JWT.create()
-                .withSubject(userName)
-                .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);	// signing the Web Token
-
+        String accessToken = jwtTokenProvider.generateJwtToken(userName);
 
         // here we are building the JSON Refresh Web Token
-        String refreshToken = JWT.create()
-                .withSubject(userName)
-                .withExpiresAt(new Date(System.currentTimeMillis() + (SecurityConstants.EXPIRATION_TIME * 3) ))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);	// signing the Web Token
-
-
+        String refreshToken = jwtTokenProvider.generateJwtToken(userName);
 
         // add the information to the header
 //        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + accessToken);

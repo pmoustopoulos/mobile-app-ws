@@ -3,6 +3,7 @@ package com.ainigma100.app.ws.security;
 import com.ainigma100.app.ws.filter.CustomAuthenticationFilter;
 import com.ainigma100.app.ws.filter.CustomAuthorizationFilter;
 import com.ainigma100.app.ws.service.UserService;
+import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JWTTokenProvider jwtTokenProvider;
 
 
     @Override
@@ -34,19 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL) // only the POST method to /users is currently public
-//                .permitAll()
-//                .anyRequest()                           // any other request
-//                .authenticated()                        // should be authenticated
-//                .and()
-//                .addFilter(this.getAuthenticationFilter())                      // use our own authentication filter
-//                .sessionManagement()
-//                // tell Spring Security that our REST API should be stateless
-//                // we do not want to create an HTTP Session
-//                .sessionCreationPolicy(STATELESS);
-
         // disable cross-side request forgery
         http.csrf().disable();
         // tell Spring Security that our REST API should be stateless we do not want to create an HTTP Session
@@ -55,8 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(SecurityConstants.PUBLIC_URLS).permitAll();
         http.authorizeRequests().anyRequest().authenticated();                         // any other request should be authenticated
         http.addFilter(this.getAuthenticationFilter());     // add custom login URL
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -74,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     public CustomAuthenticationFilter getAuthenticationFilter() throws Exception {
-        final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean());
+        final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean(), jwtTokenProvider);
         filter.setFilterProcessesUrl("/users/login");
         return filter;
     }
