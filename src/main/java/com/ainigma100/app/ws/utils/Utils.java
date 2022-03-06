@@ -1,5 +1,7 @@
 package com.ainigma100.app.ws.utils;
 
+import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Order;
@@ -10,8 +12,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class Utils {
+
+    private final JWTTokenProvider jwtTokenProvider;
+
+
+    public String generatePasswordResetToken(String id) {
+        return jwtTokenProvider.generateJwtToken(id);
+    }
 
     public String generateRandomId() {
         return UUID.randomUUID().toString();

@@ -2,11 +2,13 @@ package com.ainigma100.app.ws.service;
 
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
+import com.ainigma100.app.ws.entity.PasswordResetTokenEntity;
 import com.ainigma100.app.ws.entity.UserEntity;
 import com.ainigma100.app.ws.exception.RecordAlreadyExistsException;
 import com.ainigma100.app.ws.exception.RecordNotFoundException;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
+import com.ainigma100.app.ws.repository.PasswordResetTokenRepository;
 import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.utils.SortItem;
 import com.ainigma100.app.ws.utils.Utils;
@@ -32,6 +34,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final Utils utils;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -54,6 +57,33 @@ public class UserServiceImpl implements UserService {
         Page<UserDetailsResponseModel> returnValue = utils.mapPage(userEntityPageFromDb, UserDetailsResponseModel.class);
 
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
+    }
+
+    @Override
+    public boolean requestPasswordReset(String email) {
+
+        boolean returnValue = false;
+
+        UserEntity userFromDb = userRepository.findByEmail(email);
+
+        if (userFromDb == null) {
+            return returnValue;
+        }
+
+        // generate a password reset token
+        String token = utils.generatePasswordResetToken(userFromDb.getId());
+
+        // store token and associate it to a specific user
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserDetails(userFromDb);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+
+        // send email to the user with the reset token
+        log.info("Reset token {}", token);
+
+        return true;
+
     }
 
 

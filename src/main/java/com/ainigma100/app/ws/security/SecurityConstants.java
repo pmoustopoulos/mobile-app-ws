@@ -15,6 +15,7 @@ public class SecurityConstants {
     public static final String JWT_SECRET = "ifh7ws456f9zq2t";
     public static final String[] PUBLIC_URLS = {
             "/users/login",
+            "/users/password-reset",
             "/v2/api-docs",
             "/swagger-resources/**",
             "/swagger-ui/**",

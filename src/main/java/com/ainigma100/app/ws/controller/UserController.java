@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.controller;
 
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
+import com.ainigma100.app.ws.model.request.PasswordResetRequestModel;
 import com.ainigma100.app.ws.model.request.UserDetailsRequestModel;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.AddressResponseModel;
@@ -101,6 +102,20 @@ public class UserController {
         AddressResponseModel returnValue = utils.map(addressDTO, AddressResponseModel.class);
 
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
+    }
+
+    @PostMapping("/password-reset")
+    public ResponseEntity<String> requestPasswordReset(
+            @RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+
+        boolean isPasswordReset = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+        if (isPasswordReset) {
+            return new ResponseEntity<>("Password has been reset", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Password reset failed", HttpStatus.BAD_REQUEST);
+
     }
 
 

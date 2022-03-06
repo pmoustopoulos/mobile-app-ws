@@ -15,4 +15,6 @@ public interface UserService extends UserDetailsService {
     ResponseEntity<String> deleteUserById(String id);
 
     ResponseEntity<Page<UserDetailsResponseModel>> getUsersUsingPagination(UserSearchCriteria userSearchCriteria);
+
+    boolean requestPasswordReset(String email);
 }
