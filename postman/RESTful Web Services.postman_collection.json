@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f78d1410-7463-4dca-b352-174980cd99b7",
+		"_postman_id": "e2e68a02-5197-4263-9047-d70096b729d0",
 		"name": "RESTful Web Services",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -172,7 +172,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzE3MjN9.lSScflE4SDMjCQcqonZmDX98qBavnULuDAoxBXItLOM",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJVc2VyIE1hbmFnZW1lbnQgUG9ydGFsIiwic3ViIjoiOWI5NzViZjYtOWM0Ni00YmNiLWI3Y2ItNjYyMGIwNGZlMzNhIiwiaXNzIjoiQWluaWdtYSAxMDAiLCJleHAiOjE2NDc0NDQ3NzgsImlhdCI6MTY0NjU4MDc3OH0.XiIc9PW72onQYJX4_2JWdBC2kUZm83ODMw9RCq4bD7mVaBaHADZUA0q4VB7-A-dhOoYPcnFBt0KV27WAygz02Q",
 									"type": "string"
 								}
 							]
@@ -198,6 +198,67 @@
 							"path": [
 								"users",
 								"pagination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Password Reset Request",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jwick@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/users/password-reset-request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"password-reset-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJVc2VyIE1hbmFnZW1lbnQgUG9ydGFsIiwic3ViIjoiOWI5NzViZjYtOWM0Ni00YmNiLWI3Y2ItNjYyMGIwNGZlMzNhIiwiaXNzIjoiQWluaWdtYSAxMDAiLCJleHAiOjE2NDc0NDg4MzMsImlhdCI6MTY0NjU4NDgzM30.-J59TKQd9K_D1X7iFDO9vjkqK4W1cEPrpurQAvNnAiuK3x9zmonfx20vPp4uJtv82GNNFAH6ugIz5qU9LQLkMA\",\n    \"newPassword\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/users/password-reset",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"password-reset"
 							]
 						}
 					},

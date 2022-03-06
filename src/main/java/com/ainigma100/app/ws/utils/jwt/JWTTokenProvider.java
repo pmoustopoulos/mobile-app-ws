@@ -113,6 +113,18 @@ public class JWTTokenProvider {
     }
 
 
+    /**
+     * This method checks if a token has expired
+     *
+     * @param token
+     * @return
+     */
+    public boolean isTokenExpired(String token) {
+        JWTVerifier verifier = this.getJWTVerifier();
+        Date expiration = verifier.verify(token).getExpiresAt();
+        return expiration.before(new Date());
+    }
+
 
 //    private String[] getClaimsFromUser(UserEntity userEntity) {
 //        List<String> authorities = new ArrayList<>();

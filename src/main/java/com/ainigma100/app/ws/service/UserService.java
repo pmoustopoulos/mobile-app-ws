@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
     ResponseEntity<Page<UserDetailsResponseModel>> getUsersUsingPagination(UserSearchCriteria userSearchCriteria);
 
     boolean requestPasswordReset(String email);
+
+    boolean resetPassword(String token, String newPassword);
 }

@@ -23,6 +23,10 @@ public class Utils {
         return jwtTokenProvider.generateJwtToken(id);
     }
 
+    public boolean isTokenExpired(String token) {
+        return jwtTokenProvider.isTokenExpired(token);
+    }
+
     public String generateRandomId() {
         return UUID.randomUUID().toString();
     }

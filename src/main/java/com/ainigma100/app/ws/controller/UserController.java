@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.controller;
 
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
+import com.ainigma100.app.ws.model.request.PasswordResetModel;
 import com.ainigma100.app.ws.model.request.PasswordResetRequestModel;
 import com.ainigma100.app.ws.model.request.UserDetailsRequestModel;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
@@ -104,11 +105,27 @@ public class UserController {
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
-    @PostMapping("/password-reset")
+    @PostMapping("/password-reset-request")
     public ResponseEntity<String> requestPasswordReset(
             @RequestBody PasswordResetRequestModel passwordResetRequestModel) {
 
         boolean isPasswordReset = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+        if (isPasswordReset) {
+            return new ResponseEntity<>("Password reset request has been sent", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Password reset request failed", HttpStatus.BAD_REQUEST);
+
+    }
+
+    @PostMapping("/password-reset")
+    public ResponseEntity<String> resetPassword(
+            @RequestBody PasswordResetModel passwordResetModel) {
+
+        boolean isPasswordReset = userService.resetPassword(
+                passwordResetModel.getToken(),
+                passwordResetModel.getNewPassword());
 
         if (isPasswordReset) {
             return new ResponseEntity<>("Password has been reset", HttpStatus.OK);
@@ -117,7 +134,6 @@ public class UserController {
         return new ResponseEntity<>("Password reset failed", HttpStatus.BAD_REQUEST);
 
     }
-
 
 }
 
