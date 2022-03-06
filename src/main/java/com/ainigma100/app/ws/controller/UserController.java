@@ -7,6 +7,7 @@ import com.ainigma100.app.ws.model.request.PasswordResetRequestModel;
 import com.ainigma100.app.ws.model.request.UserDetailsRequestModel;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.AddressResponseModel;
+import com.ainigma100.app.ws.model.response.FileResponse;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.service.AddressService;
 import com.ainigma100.app.ws.service.UserService;
@@ -14,13 +15,22 @@ import com.ainigma100.app.ws.swagger.SwaggerConstants;
 import com.ainigma100.app.ws.utils.Utils;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Api(tags = {SwaggerConstants.API_TAG})
@@ -135,6 +145,50 @@ public class UserController {
 
         return new ResponseEntity<>("Password reset failed", HttpStatus.BAD_REQUEST);
 
+    }
+
+
+    @GetMapping("/report")
+    public ResponseEntity<FileResponse> getExcelReportAsEncodedValue() throws IOException {
+
+        ByteArrayInputStream byteArrayInputStream = userService.getExcelReport();
+
+        int n = byteArrayInputStream.available();
+        byte[] bytes = new byte[n];
+        byteArrayInputStream.read(bytes, 0, n);
+
+        String base64String = Base64.encodeBase64String(bytes);
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fileName = localDateTime.format(format).concat("_User_Report.xlsx");
+
+        FileResponse fileResponse = new FileResponse();
+        fileResponse.setFile(base64String);
+        fileResponse.setFileName(fileName);
+
+        return new ResponseEntity<>(fileResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/download-report")
+    public ResponseEntity<InputStreamResource> downloadExcelReport() throws IOException {
+
+        ByteArrayInputStream byteArrayInputStream = userService.getExcelReport();
+
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fileName = localDateTime.format(format).concat("_User_Report.xlsx");
+
+        InputStream targetStream = byteArrayInputStream;
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Disposition", "attachment; filename=".concat(fileName));
+
+        return ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .contentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE))
+                .body(new InputStreamResource(targetStream));
     }
 
 }

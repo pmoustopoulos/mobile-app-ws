@@ -14,6 +14,8 @@ import com.ainigma100.app.ws.utils.SortItem;
 import com.ainigma100.app.ws.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,7 +26,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Column;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +44,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final Utils utils;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+    CellStyle formatTextCellStyle = null;
+    CellStyle formatDateCellStyle = null;
+    CellStyle formatDateTimeCellStyle = null;
+    CellStyle formatNumberCellStyle = null;
 
 
     @Override
@@ -121,6 +133,91 @@ public class UserServiceImpl implements UserService {
         passwordResetTokenRepository.delete(passwordResetTokenEntity);
 
         return returnValue;
+    }
+
+    @Override
+    public ByteArrayInputStream getExcelReport() {
+
+        List<UserEntity> userEntityList = userRepository.findAll();
+
+        String[] userEntityColumns = {
+                "USER ID", "FIRST NAME", "LAST NAME", "EMAIL",
+                "CREATION DATE", "MODIFICATION DATE"
+        };
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+
+            // create excel sheet
+            Sheet userEntitySheet = workbook.createSheet("Users");
+
+            // Header Font
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.BLACK.getIndex());
+
+            // Header Cell Style
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+            headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // create Header Row
+            Row userEntityHeaderRow = userEntitySheet.createRow(0);
+
+            // Write Header
+            for (int col = 0; col < userEntityColumns.length; col++) {
+                Cell cell = userEntityHeaderRow.createCell(col);
+                cell.setCellValue(userEntityColumns[col]);
+                cell.setCellStyle(headerCellStyle);
+            }
+
+            // format text cell
+            formatTextCellStyle = workbook.createCellStyle();
+            formatTextCellStyle.setDataFormat(workbook.createDataFormat().getFormat("@"));
+
+            // format date cells
+            formatDateCellStyle = workbook.createCellStyle();
+            formatDateCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy"));
+
+            // format date time cells
+            formatDateTimeCellStyle = workbook.createCellStyle();
+            formatDateTimeCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy HH:mm:ss"));
+
+            // format number cells
+            formatNumberCellStyle = workbook.createCellStyle();
+            formatNumberCellStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
+
+            // we start from one because we have already set the headers to zero
+            int rowIndex = 1;
+            for (UserEntity userRecord : userEntityList) {
+
+                Row row = userEntitySheet.createRow(rowIndex++);
+
+                // set each column value inside the Excel
+                Utils.setCellValue(userRecord.getId(), row, 0, formatTextCellStyle);
+                Utils.setCellValue(userRecord.getFirstName(), row, 1, formatTextCellStyle);
+                Utils.setCellValue(userRecord.getLastName(), row, 2, formatTextCellStyle);
+                Utils.setCellValue(userRecord.getEmail(), row, 3, formatTextCellStyle);
+                Utils.setCellValue(userRecord.getCreatedAt(), row, 4, formatDateTimeCellStyle);
+                Utils.setCellValue(userRecord.getUpdatedAt(), row, 5, formatDateTimeCellStyle);
+
+            }
+
+
+            // format column size
+            for (int col = 0; col < userEntityColumns.length; col++) {
+                userEntitySheet.autoSizeColumn(col);
+            }
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            return new ByteArrayInputStream(outputStream.toByteArray());
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
     }
 
 

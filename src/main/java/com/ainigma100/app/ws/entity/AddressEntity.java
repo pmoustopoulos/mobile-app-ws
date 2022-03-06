@@ -1,10 +1,13 @@
 package com.ainigma100.app.ws.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,6 +38,12 @@ public class AddressEntity implements Serializable {
 
     @Column(nullable = false, length = 10)
     private String type;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 
     @ManyToOne

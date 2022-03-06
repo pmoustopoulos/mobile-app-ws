@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 
 public interface UserService extends UserDetailsService {
     UserDTO createUser(UserDTO userDto);
@@ -21,4 +22,6 @@ public interface UserService extends UserDetailsService {
     boolean requestPasswordReset(String email, HttpServletResponse response);
 
     boolean resetPassword(String token, String newPassword);
+
+    ByteArrayInputStream getExcelReport();
 }
