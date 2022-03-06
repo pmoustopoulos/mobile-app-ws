@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean requestPasswordReset(String email) {
+    public boolean requestPasswordReset(String email, HttpServletResponse response) {
 
         boolean returnValue = false;
 
@@ -81,6 +82,8 @@ public class UserServiceImpl implements UserService {
 
         // send email to the user with the reset token
         log.info("Reset token {}", token);
+        // add the information to the header just for testing
+        response.addHeader("ResetPassToken", token);
 
         return true;
 

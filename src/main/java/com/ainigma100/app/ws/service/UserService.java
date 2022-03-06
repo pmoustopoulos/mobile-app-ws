@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface UserService extends UserDetailsService {
     UserDTO createUser(UserDTO userDto);
     UserDTO getUser(String email);
@@ -16,7 +18,7 @@ public interface UserService extends UserDetailsService {
 
     ResponseEntity<Page<UserDetailsResponseModel>> getUsersUsingPagination(UserSearchCriteria userSearchCriteria);
 
-    boolean requestPasswordReset(String email);
+    boolean requestPasswordReset(String email, HttpServletResponse response);
 
     boolean resetPassword(String token, String newPassword);
 }

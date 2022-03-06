@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -107,9 +108,10 @@ public class UserController {
 
     @PostMapping("/password-reset-request")
     public ResponseEntity<String> requestPasswordReset(
-            @RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+            @RequestBody PasswordResetRequestModel passwordResetRequestModel,
+            HttpServletResponse response) {
 
-        boolean isPasswordReset = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        boolean isPasswordReset = userService.requestPasswordReset(passwordResetRequestModel.getEmail(), response);
 
         if (isPasswordReset) {
             return new ResponseEntity<>("Password reset request has been sent", HttpStatus.OK);
