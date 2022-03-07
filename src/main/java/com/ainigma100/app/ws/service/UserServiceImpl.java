@@ -46,6 +46,8 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+
+    CellStyle headerCellStyle = null;
     CellStyle formatTextCellStyle = null;
     CellStyle formatDateCellStyle = null;
     CellStyle formatDateTimeCellStyle = null;
@@ -150,16 +152,8 @@ public class UserServiceImpl implements UserService {
             // create excel sheet
             Sheet userEntitySheet = workbook.createSheet("Users");
 
-            // Header Font
-            Font headerFont = workbook.createFont();
-            headerFont.setBold(true);
-            headerFont.setColor(IndexedColors.BLACK.getIndex());
-
-            // Header Cell Style
-            CellStyle headerCellStyle = workbook.createCellStyle();
-            headerCellStyle.setFont(headerFont);
-            headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-            headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            // prepare Header Cell Style
+            this.prepareHeaderCellStyle(workbook);
 
             // create Header Row
             Row userEntityHeaderRow = userEntitySheet.createRow(0);
@@ -171,21 +165,8 @@ public class UserServiceImpl implements UserService {
                 cell.setCellStyle(headerCellStyle);
             }
 
-            // format text cell
-            formatTextCellStyle = workbook.createCellStyle();
-            formatTextCellStyle.setDataFormat(workbook.createDataFormat().getFormat("@"));
-
-            // format date cells
-            formatDateCellStyle = workbook.createCellStyle();
-            formatDateCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy"));
-
-            // format date time cells
-            formatDateTimeCellStyle = workbook.createCellStyle();
-            formatDateTimeCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy HH:mm:ss"));
-
-            // format number cells
-            formatNumberCellStyle = workbook.createCellStyle();
-            formatNumberCellStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
+            // prepare Cell Style
+            this.prepareCellStyle(workbook);
 
             // we start from one because we have already set the headers to zero
             int rowIndex = 1;
@@ -339,6 +320,48 @@ public class UserServiceImpl implements UserService {
 
         // User is provided by Spring
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+    }
+
+
+    /**
+     * This method is used to prepare the Header Cell Style
+     * @param workbook
+     */
+    private void prepareHeaderCellStyle(Workbook workbook) {
+
+        // Header Font
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setColor(IndexedColors.BLACK.getIndex());
+
+        // Header Cell Style
+        headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+        headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+    }
+
+
+    /**
+     * This method is used to prepare the Cell Style
+     * @param workbook
+     */
+    private void prepareCellStyle(Workbook workbook) {
+        // format text cell
+        formatTextCellStyle = workbook.createCellStyle();
+        formatTextCellStyle.setDataFormat(workbook.createDataFormat().getFormat("@"));
+
+        // format date cells
+        formatDateCellStyle = workbook.createCellStyle();
+        formatDateCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy"));
+
+        // format date time cells
+        formatDateTimeCellStyle = workbook.createCellStyle();
+        formatDateTimeCellStyle.setDataFormat(workbook.createDataFormat().getFormat("dd-mm-yyyy HH:mm:ss"));
+
+        // format number cells
+        formatNumberCellStyle = workbook.createCellStyle();
+        formatNumberCellStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
     }
 
 }

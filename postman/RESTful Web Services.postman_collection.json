@@ -103,7 +103,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqd2lja0BnbWFpbC5jb20iLCJleHAiOjE2NDU0MzM5OTN9.FWxU4PBi6EBWVv4lo3zMJfIHd0TcYLY_31twP6FGDPM",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJVc2VyIE1hbmFnZW1lbnQgUG9ydGFsIiwic3ViIjoiandpY2tAZ21haWwuY29tIiwiaXNzIjoiQWluaWdtYSAxMDAiLCJleHAiOjE2NDc0NTM2OTYsImlhdCI6MTY0NjU4OTY5Nn0.O9MgD0BRZIRaXvs19UXvWZMnDcau6A3XOOLwRg86RFtlc97M_dvS7krKC5xXhMoX2ahMEH3vUhu6Dq7a9b5iOA",
 									"type": "string"
 								}
 							]
@@ -120,7 +120,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8088/users/3e81aea2-e0cf-4fcf-a12d-54e08b818f5c",
+							"raw": "http://localhost:8088/users/a55aa71a-a9bc-4ae4-99d4-28ff4fb55752",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -128,7 +128,7 @@
 							"port": "8088",
 							"path": [
 								"users",
-								"3e81aea2-e0cf-4fcf-a12d-54e08b818f5c"
+								"a55aa71a-a9bc-4ae4-99d4-28ff4fb55752"
 							]
 						}
 					},
