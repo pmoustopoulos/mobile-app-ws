@@ -20,9 +20,15 @@ public class LoggingFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         String h2Console = "h2-console";
+        String swagger = "swagger";
+        String apiDocs = "api-docs";
 
-        // we do not want to print logs when we access h2 database
-        if (!httpServletRequest.getServletPath().contains(h2Console)) {
+
+        // we do not want to print logs when we access h2 database, api-docs and anything related to swagger
+        if (!httpServletRequest.getServletPath().contains(h2Console)
+            && !httpServletRequest.getServletPath().contains(swagger)
+            && !httpServletRequest.getServletPath().contains(apiDocs) ) {
+
             log.info("Request " + httpServletRequest.getRequestURL().toString() + ", method: " + httpServletRequest.getMethod());
             log.info("from uri: " + httpServletRequest.getRemoteAddr() + ", host: " + httpServletRequest.getRemoteHost());
 
@@ -31,10 +37,6 @@ public class LoggingFilter implements Filter {
         //pre methods call stamps
         chain.doFilter(request, response);
 
-        // we do not want to print logs when we access h2 database
-        if (!httpServletRequest.getServletPath().contains(h2Console)) {
-            log.info("Response status: " + httpServletResponse.getStatus());
-        }
 
     }
 
