@@ -15,6 +15,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static org.springframework.http.HttpHeaders.*;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -36,13 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.cors();
         // disable cross-side request forgery
         http.csrf().disable();
         // tell Spring Security that our REST API should be stateless we do not want to create an HTTP Session
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll();
         http.authorizeRequests().antMatchers(SecurityConstants.PUBLIC_URLS).permitAll();
-        http.authorizeRequests().anyRequest().authenticated();                         // any other request should be authenticated
+        http.authorizeRequests().anyRequest().authenticated();   // any other request should be authenticated
         http.addFilter(this.getAuthenticationFilter());     // add custom login URL
         http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
@@ -65,6 +73,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManagerBean(), jwtTokenProvider);
         filter.setFilterProcessesUrl("/users/login");
         return filter;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+
+        // accept multiple origins, or you can provide a list of origins that can send requests to your API
+        configuration.setAllowedOrigins(Arrays.asList("http://www.tester.com"));
+        // specify which methods are allowed
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        // if we want to send credentials (authorization headers or cookies or ssl client certificate etc.)
+        // to our http response
+        configuration.setAllowCredentials(true);
+        // configure allowed headers
+        configuration.setAllowedHeaders(Arrays.asList(AUTHORIZATION, CACHE_CONTROL, CONTENT_TYPE));
+
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
