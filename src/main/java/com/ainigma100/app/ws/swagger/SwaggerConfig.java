@@ -3,6 +3,7 @@ package com.ainigma100.app.ws.swagger;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -20,6 +21,8 @@ import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
 
+// it makes Swagger disabled by default and guarantees it cannot be enabled in “prod”.
+@Profile({"!prod && dev"})
 @Configuration
 public class SwaggerConfig {
 
