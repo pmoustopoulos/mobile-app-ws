@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -20,7 +18,14 @@ import java.io.Serializable;
 public class AuthorityEntity implements Serializable {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false, length = 20)
+    private String name;
+
+    // It is mapped by 'authorities' property which exists in RoleEntity class
+    @ManyToMany(mappedBy = "authorities")
+    private Collection<RoleEntity> roles;
 
 }
