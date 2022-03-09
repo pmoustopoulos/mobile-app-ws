@@ -10,6 +10,7 @@ import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.repository.PasswordResetTokenRepository;
 import com.ainigma100.app.ws.repository.UserRepository;
+import com.ainigma100.app.ws.security.UserPrincipal;
 import com.ainigma100.app.ws.utils.SortItem;
 import com.ainigma100.app.ws.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -346,6 +347,9 @@ public class UserServiceImpl implements UserService {
 
         // User is provided by Spring
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+
+//        return new UserPrincipal(userEntity, userEntity.getId());
+
     }
 
 

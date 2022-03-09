@@ -47,7 +47,7 @@ public class UserController {
     @PostMapping("/pagination")
     public ResponseEntity<Page<UserDetailsResponseModel>> getUsersUsingPagination(
             @Valid @RequestBody UserSearchCriteria userSearchCriteria
-            ) {
+    ) {
 
         return userService.getUsersUsingPagination(userSearchCriteria);
     }

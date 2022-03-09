@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -51,7 +52,7 @@ public class UserEntity implements Serializable {
 
     // specify the name of the field that owns the relationship in the AddressEntity class
     @OneToMany(mappedBy = "userDetails", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<AddressEntity> addresses;
+    private Set<AddressEntity> addresses;
 
 
     // Persist: If a user is deleted, we do not want to cascade and delete the role as well
