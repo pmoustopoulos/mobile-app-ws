@@ -30,6 +30,10 @@ public class Utils {
         return jwtTokenProvider.generateJwtToken(id);
     }
 
+    public String generateEmailVerificationToken(String id) {
+        return jwtTokenProvider.generateJwtToken(id);
+    }
+
     public boolean isTokenExpired(String token) {
         return jwtTokenProvider.isTokenExpired(token);
     }

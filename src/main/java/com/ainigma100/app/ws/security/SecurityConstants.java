@@ -17,6 +17,7 @@ public class SecurityConstants {
             "/users/login",
             "/users/password-reset-request",
             "/users/password-reset",
+            "/users/email-verification",
             "/v2/api-docs",
             "/swagger-resources/**",
             "/swagger-ui/**",

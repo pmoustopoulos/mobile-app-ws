@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Page<UserEntity> getUsersUsingPagination(
             @Param("criteria") UserSearchCriteria criteria,
             Pageable pageable);
+
+    UserEntity findUserByEmailVerificationToken(String token);
 }
