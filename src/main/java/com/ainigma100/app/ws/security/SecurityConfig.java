@@ -44,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors();
+        // allow us to view the H2 Console UI in the browser
+        http.headers().frameOptions().disable();
         // disable cross-side request forgery
         http.csrf().disable();
         // tell Spring Security that our REST API should be stateless we do not want to create an HTTP Session

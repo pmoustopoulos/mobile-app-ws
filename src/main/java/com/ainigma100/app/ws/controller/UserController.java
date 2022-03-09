@@ -64,11 +64,13 @@ public class UserController {
 
 
     @PostMapping
-    public UserDetailsResponseModel createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+    public UserDetailsResponseModel createUser(
+            @RequestBody UserDetailsRequestModel userDetailsRequestModel,
+            HttpServletResponse response) {
 
         UserDTO userDto = utils.map(userDetailsRequestModel, UserDTO.class);
 
-        UserDTO createdUser = userService.createUser(userDto);
+        UserDTO createdUser = userService.createUser(userDto, response);
 
         return utils.map(createdUser, UserDetailsResponseModel.class);
 
@@ -189,6 +191,18 @@ public class UserController {
                 .headers(httpHeaders)
                 .contentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .body(new InputStreamResource(targetStream));
+    }
+
+    @GetMapping("/email-verification")
+    public ResponseEntity<String> verifyEmailToken(@RequestParam(value = "token") String token) {
+
+        boolean isVerified = userService.verifyEmailToken(token);
+
+        if (isVerified) {
+            return new ResponseEntity<>("Your email has been verified", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Your email has not been verified", HttpStatus.BAD_REQUEST);
     }
 
 }

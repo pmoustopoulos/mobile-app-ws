@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e2e68a02-5197-4263-9047-d70096b729d0",
+		"_postman_id": "a30394c2-8a06-4a2b-9001-17c97060292c",
 		"name": "RESTful Web Services",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -31,6 +31,35 @@
 							"port": "8088",
 							"path": [
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify email using token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8088/users/email-verification?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJVc2VyIE1hbmFnZW1lbnQgUG9ydGFsIiwiaXNzIjoiQWluaWdtYSAxMDAiLCJleHAiOjE2NDc2OTk4NDIsImlhdCI6MTY0NjgzNTg0Mn0.YYhAiyxsE3xCNWrl01Fiedwp2tLN-rF85G-mbbRy1Ui48XePAs_Y_8_4Ws_ZqDXbhEKxV6YOS92pf3ZU1dB4Mw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"email-verification"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJVc2VyIE1hbmFnZW1lbnQgUG9ydGFsIiwiaXNzIjoiQWluaWdtYSAxMDAiLCJleHAiOjE2NDc2OTk4NDIsImlhdCI6MTY0NjgzNTg0Mn0.YYhAiyxsE3xCNWrl01Fiedwp2tLN-rF85G-mbbRy1Ui48XePAs_Y_8_4Ws_ZqDXbhEKxV6YOS92pf3ZU1dB4Mw"
+								}
 							]
 						}
 					},

@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -203,7 +202,28 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDTO createUser(UserDTO userDto) {
+    public boolean verifyEmailToken(String token) {
+        boolean returnValue = false;
+
+        // Find user by token
+        UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
+
+        if (userEntity != null) {
+            boolean hasTokenExpired = utils.isTokenExpired(token);
+            if (!hasTokenExpired) {
+                userEntity.setEmailVerificationToken(null);
+                userEntity.setEmailVerificationStatus(Boolean.TRUE);
+                userRepository.save(userEntity);
+                returnValue = true;
+            }
+        }
+
+        return returnValue;
+    }
+
+
+    @Override
+    public UserDTO createUser(UserDTO userDto, HttpServletResponse response) {
 
         UserEntity userFromDb = userRepository.findByEmail(userDto.getEmail());
 
@@ -224,8 +244,14 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = utils.map(userDto, UserEntity.class);
 
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(userEntity.getId()));
 
         UserEntity savedUser = userRepository.save(userEntity);
+
+        // Send an email message to user to verify their email address
+        log.warn("Email verification token is {}", savedUser.getEmailVerificationToken());
+        // add the information to the header just for testing
+        response.addHeader("EmailVerificationToken", savedUser.getEmailVerificationToken());
 
         // map the object into the preferred return type
         UserDTO returnValue = utils.map(savedUser, UserDTO.class);

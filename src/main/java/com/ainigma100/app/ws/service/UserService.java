@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 
 public interface UserService extends UserDetailsService {
-    UserDTO createUser(UserDTO userDto);
+    UserDTO createUser(UserDTO userDto, HttpServletResponse response);
     UserDTO getUser(String email);
     UserDTO getUserById(String userId);
     UserDTO updateUser(String userId, UserDTO userDto);
@@ -24,4 +24,6 @@ public interface UserService extends UserDetailsService {
     boolean resetPassword(String token, String newPassword);
 
     ByteArrayInputStream getExcelReport();
+
+    boolean verifyEmailToken(String token);
 }
