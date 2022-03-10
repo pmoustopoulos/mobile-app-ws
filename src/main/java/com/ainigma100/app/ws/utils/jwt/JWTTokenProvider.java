@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.utils.jwt;
 
 import com.ainigma100.app.ws.entity.UserEntity;
 import com.ainigma100.app.ws.security.SecurityConstants;
+import com.ainigma100.app.ws.security.UserPrincipal;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -62,18 +63,18 @@ public class JWTTokenProvider {
 
     /**
      * This method is used to get an Authentication
-     * @param username
+     * @param userPrincipal
      * @param authorities
      * @param request
      * @return
      */
     public Authentication getAuthentication(
-            String username,
+            UserPrincipal userPrincipal,
             List<GrantedAuthority> authorities,
             HttpServletRequest request) {
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(username, null, authorities);
+                new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
 
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return usernamePasswordAuthenticationToken;

@@ -51,12 +51,12 @@ public class InitialUsersSetup {
         UserEntity adminUser = new UserEntity();
         adminUser.setFirstName("Petros");
         adminUser.setLastName("Admin");
-        adminUser.setEmail("admin@test.com");
+        adminUser.setEmail("admin@gmail.com");
         adminUser.setEmailVerificationStatus(true);
-        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("12345"));
+        adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("123"));
         adminUser.setRoles(Arrays.asList(roleAdmin));
 
-        UserEntity storedUserDetails = userRepository.findByEmail("admin@test.com");
+        UserEntity storedUserDetails = userRepository.findByEmail("admin@gmail.com");
         if (storedUserDetails == null) {
             userRepository.save(adminUser);
         }

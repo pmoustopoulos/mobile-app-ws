@@ -1,15 +1,13 @@
 package com.ainigma100.app.ws.filter;
 
+import com.ainigma100.app.ws.entity.UserEntity;
+import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.security.SecurityConstants;
+import com.ainigma100.app.ws.security.UserPrincipal;
 import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private final JWTTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -57,11 +56,13 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String username = jwtTokenProvider.getSubject(token);
 
                     if (jwtTokenProvider.isTokenValid(username, token)) {
-                        // in our current example we do not have authorities
-//                        List<GrantedAuthority> authorities = jwtTokenProvider.getAuthorities(token);
-                        List<GrantedAuthority> authorities = new ArrayList<>();
 
-                        Authentication authenticationToken = jwtTokenProvider.getAuthentication(username, authorities, request);
+                        UserEntity userEntity = userRepository.findByEmail(username);
+                        UserPrincipal userPrincipal = new UserPrincipal(userEntity);
+
+                        List<GrantedAuthority> authorities = new ArrayList<>(userPrincipal.getAuthorities());
+
+                        Authentication authenticationToken = jwtTokenProvider.getAuthentication(userPrincipal, authorities, request);
 
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     } else {

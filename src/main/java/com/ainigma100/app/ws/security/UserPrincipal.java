@@ -3,7 +3,8 @@ package com.ainigma100.app.ws.security;
 import com.ainigma100.app.ws.entity.AuthorityEntity;
 import com.ainigma100.app.ws.entity.RoleEntity;
 import com.ainigma100.app.ws.entity.UserEntity;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +12,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 
-@RequiredArgsConstructor
+
 public class UserPrincipal implements UserDetails {
 
-    private final UserEntity userEntity;
-    private final String userId;
+    private UserEntity userEntity;
+
+    // se want setter and getter only for this property
+    @Getter @Setter
+    private String id;
+
+    public UserPrincipal(UserEntity userEntity) {
+        this.userEntity = userEntity;
+        this.id = userEntity.getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,6 +43,7 @@ public class UserPrincipal implements UserDetails {
             authorityEntities.addAll(role.getAuthorities());
         });
 
+        // now we will have both roles and authority names
         authorityEntities.forEach((authorityEntity) -> {
             authorities.add(new SimpleGrantedAuthority(authorityEntity.getName()));
         });

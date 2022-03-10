@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.filter;
 
 import com.ainigma100.app.ws.model.request.UserLoginRequestModel;
 import com.ainigma100.app.ws.security.SecurityConstants;
+import com.ainigma100.app.ws.security.UserPrincipal;
 import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -66,7 +67,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                             FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
 
-        String userName = ((User) authentication.getPrincipal()).getUsername();
+        String userName = ((UserPrincipal) authentication.getPrincipal()).getUsername();
 
         // here we are building the JSON Access Web Token
         String accessToken = jwtTokenProvider.generateJwtToken(userName);

@@ -2,6 +2,7 @@ package com.ainigma100.app.ws.security;
 
 import com.ainigma100.app.ws.filter.CustomAuthenticationFilter;
 import com.ainigma100.app.ws.filter.CustomAuthorizationFilter;
+import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.service.UserService;
 import com.ainigma100.app.ws.utils.jwt.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpHeaders.*;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -52,9 +56,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/users").permitAll();
         http.authorizeRequests().antMatchers(SecurityConstants.PUBLIC_URLS).permitAll();
+        // using roles to set a restriction
+//        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN");
+        // using authority to set a restriction
+//        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("DELETE_AUTHORITY");
         http.authorizeRequests().anyRequest().authenticated();   // any other request should be authenticated
         http.addFilter(this.getAuthenticationFilter());     // add custom login URL
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     }
 

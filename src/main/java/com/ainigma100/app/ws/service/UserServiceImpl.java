@@ -346,9 +346,9 @@ public class UserServiceImpl implements UserService {
         log.info("User {} found in the database", email);
 
         // User is provided by Spring
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+//        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
 
-//        return new UserPrincipal(userEntity, userEntity.getId());
+        return new UserPrincipal(userEntity);
 
     }
 

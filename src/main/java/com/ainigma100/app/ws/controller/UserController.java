@@ -22,6 +22,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +55,7 @@ public class UserController {
     }
 
 
+//    @PostAuthorize("hasRole('ADMIN') or returnObject.id == principal.id")
     @GetMapping("/{id}")
     public UserDetailsResponseModel getUserByUserId(@PathVariable String id) {
 
@@ -90,6 +93,9 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #id == principal.id")
+    //@PreAuthorize("hasAuthority('DELETE_AUTHORITY')")
+    //@Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         return userService.deleteUserById(id);
