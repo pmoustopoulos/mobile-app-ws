@@ -12,6 +12,7 @@ import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.service.AddressService;
 import com.ainigma100.app.ws.service.UserService;
 import com.ainigma100.app.ws.swagger.SwaggerConstants;
+import com.ainigma100.app.ws.utils.Roles;
 import com.ainigma100.app.ws.utils.Utils;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Api(tags = {SwaggerConstants.API_TAG})
@@ -72,6 +75,8 @@ public class UserController {
             HttpServletResponse response) {
 
         UserDTO userDto = utils.map(userDetailsRequestModel, UserDTO.class);
+        // set a default USER_ROLE to newly created users
+        userDto.setRoles(new HashSet<>(List.of(Roles.ROLE_USER.name())));
 
         UserDTO createdUser = userService.createUser(userDto, response);
 

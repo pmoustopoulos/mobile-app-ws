@@ -3,12 +3,14 @@ package com.ainigma100.app.ws.service;
 import com.ainigma100.app.ws.dto.AddressDTO;
 import com.ainigma100.app.ws.dto.UserDTO;
 import com.ainigma100.app.ws.entity.PasswordResetTokenEntity;
+import com.ainigma100.app.ws.entity.RoleEntity;
 import com.ainigma100.app.ws.entity.UserEntity;
 import com.ainigma100.app.ws.exception.RecordAlreadyExistsException;
 import com.ainigma100.app.ws.exception.RecordNotFoundException;
 import com.ainigma100.app.ws.model.request.UserSearchCriteria;
 import com.ainigma100.app.ws.model.response.UserDetailsResponseModel;
 import com.ainigma100.app.ws.repository.PasswordResetTokenRepository;
+import com.ainigma100.app.ws.repository.RoleRepository;
 import com.ainigma100.app.ws.repository.UserRepository;
 import com.ainigma100.app.ws.security.UserPrincipal;
 import com.ainigma100.app.ws.utils.SortItem;
@@ -31,9 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,6 +41,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final Utils utils;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -246,6 +247,19 @@ public class UserServiceImpl implements UserService {
 
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(userEntity.getId()));
+
+        // Get the roles from the UserDTO
+        Collection<RoleEntity> roleEntities = new HashSet<>();
+        for(String role: userDto.getRoles()) {
+
+            RoleEntity roleEntity = roleRepository.findByName(role);
+
+            if(roleEntity != null) {
+                roleEntities.add(roleEntity);
+            }
+        }
+        // set the roles to UserEntity
+        userEntity.setRoles(roleEntities);
 
         UserEntity savedUser = userRepository.save(userEntity);
 

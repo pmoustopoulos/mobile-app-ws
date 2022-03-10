@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -22,5 +23,6 @@ public class UserDTO implements Serializable {
     private Boolean emailVerificationStatus = false;
 
     private List<AddressDTO> addresses;
+    private Collection<String> roles;
 
 }
