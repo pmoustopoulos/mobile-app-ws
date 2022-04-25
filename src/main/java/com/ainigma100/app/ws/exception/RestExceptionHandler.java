@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Server Error", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Server Error", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -51,7 +52,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Null Pointer Exception", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Null Pointer Exception", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -65,7 +66,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Record Not Found Exception", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Record Not Found Exception", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -78,7 +79,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Record Already Exists Exception", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Record Already Exists Exception", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -92,7 +93,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Constraint Violation", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Constraint Violation", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
@@ -107,7 +108,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("DataAccessException occurred in Repository/DAO interface", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "DataAccessException occurred in Repository/DAO interface", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -147,7 +148,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Missing Request Param '" + parameterName + "' Exception", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Missing Request Param '" + parameterName + "' Exception", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -169,7 +170,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
 
-        ErrorMessage error = new ErrorMessage("Missing Path Variable '" + variableName + "' Exception", details);
+        ErrorMessage error = new ErrorMessage(LocalDateTime.now(), "Missing Path Variable '" + variableName + "' Exception", details);
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 
