@@ -3,7 +3,9 @@ package com.ainigma100.app.ws.model.request;
 import com.ainigma100.app.ws.utils.SortItem;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -12,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Getter
+@Builder
 public class UserSearchCriteria implements Serializable {
 
     @ApiModelProperty(example = "0", required = true, position = 4)
